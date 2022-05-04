@@ -45,9 +45,7 @@ twice f x = f (f x)
 
 -- exercise 3.5
 
--- it isn't possible for all function types to statically determine whether two
--- functions always produce the same result, because many functions operate on
--- infinitely many inputs, so it's impossible to verify. further, even for
--- types with bounded value sets, determining equality requires function
--- (and therefore program) evaluation and so cannot be done in the type checker
--- prior to program evaluation
+-- in order to compare two functions for equality you must determine whether
+-- they produce the same results for every possible input, but this requires
+-- program evaluation and so cannot be done in the type system prior to
+-- execution (i.e. it's part of dynamic semantics and not static semantics).
