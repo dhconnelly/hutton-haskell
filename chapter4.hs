@@ -27,3 +27,47 @@ safetail2 xs
 safetail3 :: [a] -> [a]
 safetail3 (_ : xs) = xs
 safetail3 _ = []
+
+-- exercise 4.4
+
+(#||) :: Bool -> Bool -> Bool
+True #|| True = True
+True #|| False = True
+False #|| True = True
+False #|| False = False
+
+(##||) :: Bool -> Bool -> Bool
+True ##|| _ = True
+_ ##|| True = True
+_ ##|| _ = False
+
+(###||) :: Bool -> Bool -> Bool
+True ###|| _ = True
+False ###|| x = x
+
+(####||) :: Bool -> Bool -> Bool
+x ####|| y
+  | x = True
+  | y = True
+  | otherwise = False
+
+--- exercise 4.5
+
+(#&&) :: Bool -> Bool -> Bool
+x #&& y =
+  if x
+    then
+      if y
+        then True
+        else False
+    else False
+
+--- exercise 4.6
+
+(##&&) :: Bool -> Bool -> Bool
+x ##&& y = if x then y else False
+
+--- exercise 4.7
+
+mult :: Int -> Int -> Int -> Int
+mult = \x -> \y -> \z -> x * y * z
