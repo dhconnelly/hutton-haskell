@@ -71,3 +71,15 @@ x ##&& y = if x then y else False
 
 mult :: Int -> Int -> Int -> Int
 mult = \x -> \y -> \z -> x * y * z
+
+-- exercise 4.8
+
+luhnDouble :: Int -> Int
+luhnDouble x = if y > 9 then y - 9 else y
+  where
+    y = 2 * x
+
+luhn :: Int -> Int -> Int -> Int -> Bool
+luhn a b c d = mod sum 10 == 0
+  where
+    sum = luhnDouble a + b + luhnDouble c + d
