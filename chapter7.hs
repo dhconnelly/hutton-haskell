@@ -1,3 +1,5 @@
+import Data.Char
+
 -- exercise 7.1
 
 fIfP :: (a -> b) -> (a -> Bool) -> [a] -> [b]
@@ -45,3 +47,63 @@ curry' f = \x -> \y -> f (x, y)
 
 uncurry' :: (a -> b -> c) -> ((a, b) -> c)
 uncurry' f = \(x, y) -> f x y
+
+-- exercise 7.6
+
+type Bit = Int
+
+unfold p h t x
+  | p x = []
+  | otherwise = h x : unfold p h t (t x)
+
+int2bin :: Int -> [Bit]
+int2bin = unfold (== 0) (`mod` 2) (`div` 2)
+
+chop8 :: [Bit] -> [[Bit]]
+chop8 = unfold null ((take 8) . (++ (repeat 0))) (drop 8)
+
+map'' :: (a -> b) -> [a] -> [b]
+map'' f = unfold null (f . head) tail
+
+never _ = False
+
+iterate'' :: (a -> a) -> a -> [a]
+iterate'' f = unfold never id f
+
+-- exercise 7.7
+
+bin2int :: [Bit] -> Int
+bin2int = foldr (\bit acc -> 2 * acc + bit) 0
+
+make8 :: [Bit] -> [Bit]
+make8 bits = take 8 (bits ++ repeat 0)
+
+encode :: String -> [Bit]
+encode = concat . map (make8 . int2bin . ord)
+
+decode :: [Bit] -> String
+decode = map (chr . bin2int) . chop8
+
+--
+
+addParity :: [Bit] -> [Bit]
+addParity bits = sum bits `mod` 2 : bits
+
+encode' :: String -> [Bit]
+encode' = concat . map (addParity . make8 . int2bin . ord)
+
+checkParity :: [Bit] -> [Bit]
+checkParity (parity : bits) =
+  if sum bits `mod` 2 == parity then bits else error "parity error"
+
+chop9 :: [Bit] -> [[Bit]]
+chop9 = unfold null ((take 9) . (++ (repeat 0))) (drop 9)
+
+decode' :: [Bit] -> String
+decode' = map (chr . bin2int . checkParity) . chop9
+
+transmit :: ([Bit] -> [Bit]) -> String -> String
+transmit channel = decode . channel . encode
+
+transmit' :: ([Bit] -> [Bit]) -> String -> String
+transmit' channel = decode' . channel . encode'
