@@ -107,3 +107,17 @@ transmit channel = decode . channel . encode
 
 transmit' :: ([Bit] -> [Bit]) -> String -> String
 transmit' channel = decode' . channel . encode'
+
+-- exercise 7.9
+
+altMap :: (a -> b) -> (a -> b) -> [a] -> [b]
+altMap _ _ [] = []
+altMap f g (x : xs) = f x : altMap g f xs
+
+-- exercise 7.10
+
+luhnDouble :: Int -> Int
+luhnDouble x = if y > 9 then y - 9 else y where y = 2 * x
+
+luhn :: [Int] -> Bool
+luhn = (== 0) . (`mod` 10) . sum . altMap id luhnDouble . reverse
